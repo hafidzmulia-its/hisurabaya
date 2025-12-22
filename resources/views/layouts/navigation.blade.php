@@ -15,6 +15,22 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('map')" :active="request()->routeIs('map')">
+                        {{ __('Map') }}
+                    </x-nav-link>
+                    @if(in_array(auth()->user()->role, ['admin', 'owner']))
+                        <x-nav-link :href="route('hotels.index')" :active="request()->routeIs('hotels.*')">
+                            {{ __('Hotels') }}
+                        </x-nav-link>
+                    @endif
+                    @if(auth()->user()->role === 'admin')
+                        <x-nav-link :href="route('jalan.index')" :active="request()->routeIs('jalan.*')">
+                            {{ __('Jalan') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('kecamatan.index')" :active="request()->routeIs('kecamatan.*')">
+                            {{ __('Kecamatan') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -70,6 +86,22 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('map')" :active="request()->routeIs('map')">
+                {{ __('Map') }}
+            </x-responsive-nav-link>
+            @if(in_array(auth()->user()->role, ['admin', 'owner']))
+                <x-responsive-nav-link :href="route('hotels.index')" :active="request()->routeIs('hotels.*')">
+                    {{ __('Hotels') }}
+                </x-responsive-nav-link>
+            @endif
+            @if(auth()->user()->role === 'admin')
+                <x-responsive-nav-link :href="route('jalan.index')" :active="request()->routeIs('jalan.*')">
+                    {{ __('Jalan') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('kecamatan.index')" :active="request()->routeIs('kecamatan.*')">
+                    {{ __('Kecamatan') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

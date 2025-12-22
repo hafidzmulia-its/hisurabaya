@@ -18,7 +18,7 @@
             </div>
 
             <!-- Quick Actions -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Map Card -->
                 <a href="{{ route('map') }}" class="block bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg hover:shadow-lg transition">
                     <div class="p-6">
@@ -47,6 +47,41 @@
                             </div>
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Manage Hotels</h3>
                             <p class="text-sm text-gray-600 dark:text-gray-400">Create, edit, and delete hotel listings</p>
+                        </div>
+                    </a>
+                @endif
+
+                <!-- Jalan Management Card (Admin Only) -->
+                @if(auth()->user()->role === 'admin')
+                    <a href="{{ route('jalan.index') }}" class="block bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg hover:shadow-lg transition">
+                        <div class="p-6">
+                            <div class="flex items-center mb-4">
+                                <div class="bg-yellow-100 dark:bg-yellow-900 p-3 rounded-lg">
+                                    <svg class="w-8 h-8 text-yellow-600 dark:text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Manage Jalan</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Create, edit, and delete street/road data</p>
+                        </div>
+                    </a>
+                @endif
+
+                <!-- Kecamatan Management Card (Admin Only) -->
+                @if(auth()->user()->role === 'admin')
+                    <a href="{{ route('kecamatan.index') }}" class="block bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg hover:shadow-lg transition">
+                        <div class="p-6">
+                            <div class="flex items-center mb-4">
+                                <div class="bg-orange-100 dark:bg-orange-900 p-3 rounded-lg">
+                                    <svg class="w-8 h-8 text-orange-600 dark:text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Manage Kecamatan</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Create, edit, and delete district data</p>
                         </div>
                     </a>
                 @endif
