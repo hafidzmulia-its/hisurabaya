@@ -152,7 +152,7 @@ class ObjekPointSeeder extends Seeder
                 'Longitude' => 112.7943131,
                 'HargaMin' => 0,
                 'HargaMax' => 0,
-                'StarClass' => 5,
+                'StarClass' => 1,
                 'NamaKecamatan' => 'Keputih',
                 'OwnerUsername' => null,
                 'IsActive' => 1,
