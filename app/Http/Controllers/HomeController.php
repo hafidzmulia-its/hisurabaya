@@ -11,10 +11,9 @@ class HomeController extends Controller
     {
         // Get top 5-star hotels (active only), ordered by star rating
         $topHotels = ObjekPoint::where('IsActive', true)
-            ->where('StarClass', 5)
             ->with(['kecamatan', 'images'])
             ->orderBy('StarClass', 'desc')
-            ->take(6)
+            ->take(3)
             ->get();
 
         return view('welcome', compact('topHotels'));

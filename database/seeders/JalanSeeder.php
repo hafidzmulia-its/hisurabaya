@@ -44,14 +44,14 @@ JSON;
                 'coords' => json_decode($novotelItsCoordsJson, true),
                 'StartNamaObjek' => 'ITS',
                 'EndNamaObjek' => 'NOVOTEL SAMATOR SURABAYA TIMUR',
-                'DistanceKM' => null,
+                'DistanceKM' => 4.5,
             ],
             [
                 'NamaJalan' => 'Hotel Bumi-ITS',
                 'coords' => json_decode($hotelBumiItsCoordsJson, true),
                 'StartNamaObjek' => 'ITS',
                 'EndNamaObjek' => 'HOTEL BUMI SURABAYA',
-                'DistanceKM' => null,
+                'DistanceKM' => 7.5,
             ],
         ];
 
