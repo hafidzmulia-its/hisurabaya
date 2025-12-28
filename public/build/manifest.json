@@ -1,12 +1,32 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-DpM43TPc.css",
+    "file": "assets/app-Bw--pZwY.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
     "names": [
       "app.css"
     ]
+  },
+  "resources/fonts/Avenir/Avenir Black/Avenir Black.ttf": {
+    "file": "assets/Avenir Black-Dq5xIx-2.ttf",
+    "src": "resources/fonts/Avenir/Avenir Black/Avenir Black.ttf"
+  },
+  "resources/fonts/Avenir/Avenir Book/Avenir Book.ttf": {
+    "file": "assets/Avenir Book-B7pyLZi4.ttf",
+    "src": "resources/fonts/Avenir/Avenir Book/Avenir Book.ttf"
+  },
+  "resources/fonts/Avenir/Avenir Heavy/Avenir Heavy.ttf": {
+    "file": "assets/Avenir Heavy-Ce4d7WGH.ttf",
+    "src": "resources/fonts/Avenir/Avenir Heavy/Avenir Heavy.ttf"
+  },
+  "resources/fonts/Avenir/Avenir Light/Avenir Light.ttf": {
+    "file": "assets/Avenir Light-D5ube9H8.ttf",
+    "src": "resources/fonts/Avenir/Avenir Light/Avenir Light.ttf"
+  },
+  "resources/fonts/Avenir/Avenir Regular/Avenir Regular.ttf": {
+    "file": "assets/Avenir Regular-CgYKpSjw.ttf",
+    "src": "resources/fonts/Avenir/Avenir Regular/Avenir Regular.ttf"
   },
   "resources/js/app.js": {
     "file": "assets/app-CiZ6hk-B.js",
