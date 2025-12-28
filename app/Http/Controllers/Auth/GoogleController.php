@@ -76,7 +76,7 @@ class GoogleController extends Controller
             
             \Log::info('User logged in successfully:', ['user_id' => $user->id]);
             
-            return redirect()->intended('/dashboard');
+            return redirect()->intended('/');
             
         } catch (Exception $e) {
             \Log::error('Google OAuth error:', [

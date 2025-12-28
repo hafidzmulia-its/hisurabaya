@@ -6,11 +6,10 @@ use App\Http\Controllers\MapController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\JalanController;
 use App\Http\Controllers\KecamatanController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Google OAuth Routes
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');

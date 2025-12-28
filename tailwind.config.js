@@ -12,7 +12,12 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Avenir', ...defaultTheme.fontFamily.sans],
+            },
+            colors: {
+                'auth-bg': '#D9D9D9',
+                'golden': '#F8DEC3',
+                'dark-gray': '#3A3A3A',
             },
         },
     },
