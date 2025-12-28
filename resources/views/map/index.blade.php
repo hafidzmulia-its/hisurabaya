@@ -297,6 +297,7 @@
             document.getElementById('areaFilters').classList.toggle('hidden', mode !== 'area');
             
             // Clear layers
+            hotelsLayer.clearLayers();
             routesLayer.clearLayers();
             areasLayer.clearLayers();
             
@@ -305,7 +306,9 @@
             } else if (mode === 'route') {
                 loadHotelsForRoute();
             } else if (mode === 'area') {
-                loadAreas();
+                
+                 loadAreasWithHotels();
+              
             }
         }
         
@@ -318,7 +321,7 @@
             try {
                 const response = await fetch('/api/hotels');
                 const data = await response.json();
-                console.log('Hotels loaded:', data); // Debug
+                
                 allHotels = data.features;
                 
                 hotelsLayer.clearLayers();
@@ -327,7 +330,17 @@
                     const { coordinates } = feature.geometry;
                     const props = feature.properties;
                     
-                    const imageUrl = props.image ? '{{ asset('storage') }}/' + props.image : '{{ asset('storage/jumbotron.png') }}';
+                    const fallbackImg = "{{ asset('storage/jumbotron.png') }}";
+const storageBase = "{{ asset('storage') }}/";
+
+let imageUrl = fallbackImg;
+
+if (props.image) {
+  imageUrl = (props.image.startsWith('http://') || props.image.startsWith('https://'))
+    ? props.image
+    : storageBase + props.image;
+}
+
                     
                     const marker = L.marker([coordinates[1], coordinates[0]], { icon: customIcon })
                         .bindPopup(`
@@ -501,29 +514,186 @@
             routesLayer.clearLayers();
         });
         
-        // Load areas
-        async function loadAreas() {
-            try {
-                const response = await fetch('/api/kecamatan');
-                const data = await response.json();
-                
-                areasLayer.clearLayers();
-                
-                L.geoJSON(data, {
-                    style: { 
-                        color: '#F8DEC3',
-                        weight: 2,
-                        fillColor: '#F8DEC3',
-                        fillOpacity: 0.2
-                    },
-                    onEachFeature: (feature, layer) => {
-                        layer.bindPopup(`<strong>${feature.properties.name}</strong>`);
-                    }
-                }).addTo(areasLayer);
-            } catch (error) {
-                console.error('Error loading areas:', error);
+async function loadAreasWithHotels() {
+    try {
+        // Get selected wilayah filters
+        const selectedWilayah = Array.from(document.querySelectorAll('.wilayah-filter:checked'))
+            .map(cb => cb.value);
+        
+        // Build query string for areas
+        let areaUrl = '/api/kecamatan';
+        if (selectedWilayah.length > 0) {
+            const params = new URLSearchParams();
+            selectedWilayah.forEach(w => params.append('wilayah[]', w));
+            areaUrl += '?' + params.toString();
+        }
+        
+        // Build query string for hotels
+        let hotelUrl = '/api/hotels';
+        if (selectedWilayah.length > 0) {
+            const params = new URLSearchParams();
+            selectedWilayah.forEach(w => params.append('wilayah[]', w));
+            hotelUrl += '?' + params.toString();
+        }
+        
+        // Fetch both areas and hotels
+        const [areaResponse, hotelResponse] = await Promise.all([
+            fetch(areaUrl),
+            fetch(hotelUrl)
+        ]);
+        
+        const areaData = await areaResponse.json();
+        const hotelData = await hotelResponse.json();
+        
+        console.log('Areas loaded:', areaData.features?.length);
+        console.log('Hotels loaded:', hotelData.features?.length);
+        
+        // Clear both layers
+        areasLayer.clearLayers();
+        hotelsLayer.clearLayers();
+        
+        // Add areas (polygons)
+        if (areaData.features && areaData.features.length > 0) {
+            const geoJsonLayer = L.geoJSON(areaData, {
+                style: (feature) => {
+                    // Different colors per wilayah
+                    const colors = {
+                        'Surabaya Tengah': { border: '#FF6B35', fill: '#FFE66D' },
+                        'Surabaya Barat': { border: '#4ECDC4', fill: '#95E1D3' },
+                        'Surabaya Timur': { border: '#F38181', fill: '#FFEAA7' },
+                        'Surabaya Utara': { border: '#AA96DA', fill: '#FCBAD3' },
+                        'Surabaya Selatan': { border: '#74B9FF', fill: '#A29BFE' }
+                    };
+                    
+                    const wilayah = feature.properties.wilayah;
+                    const colorScheme = colors[wilayah] || { border: '#FF6B35', fill: '#FFE66D' };
+                    
+                    return {
+                        color: colorScheme.border,
+                        weight: 3,
+                        fillColor: colorScheme.fill,
+                        fillOpacity: 0.3
+                    };
+                },
+                onEachFeature: (feature, layer) => {
+                    const name = feature.properties.name || 'Unknown';
+                    const wilayah = feature.properties.wilayah || '';
+                    layer.bindPopup(`
+                        <div class="p-2">
+                            <strong>${name}</strong>
+                            <p class="text-sm text-gray-600">${wilayah}</p>
+                        </div>
+                    `);
+                }
+            });
+            
+            geoJsonLayer.addTo(areasLayer);
+            
+            // Fit map to areas
+            if (selectedWilayah.length > 0) {
+                map.fitBounds(geoJsonLayer.getBounds());
             }
         }
+        
+        // Add hotels (markers)
+        if (hotelData.features && hotelData.features.length > 0) {
+            hotelData.features.forEach(feature => {
+                const { coordinates } = feature.geometry;
+                const props = feature.properties;
+                
+                const fallbackImg = "{{ asset('storage/jumbotron.png') }}";
+const storageBase = "{{ asset('storage') }}/";
+
+let imageUrl = fallbackImg;
+
+if (props.image) {
+  imageUrl = (props.image.startsWith('http://') || props.image.startsWith('https://'))
+    ? props.image
+    : storageBase + props.image;
+}
+
+                const marker = L.marker([coordinates[1], coordinates[0]], { icon: customIcon })
+                    .bindPopup(`
+                        <div class="p-2" style="min-width: 250px;">
+                            <img src="${imageUrl}" alt="${props.name}" class="w-full h-32 object-cover rounded mb-2" onerror="this.src='{{ asset('storage/jumbotron.png') }}'">
+                            <h3 class="font-bold text-lg mb-1">${props.name}</h3>
+                            <p class="text-sm text-gray-600 mb-1">${props.kecamatan}</p>
+                            <p class="text-sm font-semibold mb-1">
+                                ${'⭐'.repeat(props.stars)}
+                            </p>
+                            <p class="text-sm mb-2">
+                                Rp${props.price_min.toLocaleString('id-ID')} - Rp${props.price_max.toLocaleString('id-ID')}
+                            </p>
+                            <a href="/hotels/${props.id}" class="block w-full text-center bg-golden text-dark-gray px-4 py-2 rounded font-semibold hover:bg-opacity-90 transition">
+                                View Details
+                            </a>
+                        </div>
+                    `, { maxWidth: 280 });
+                
+                hotelsLayer.addLayer(marker);
+            });
+            
+            console.log(`${areaData.features.length} areas and ${hotelData.features.length} hotels displayed`);
+        }
+        
+    } catch (error) {
+        console.error('Error loading areas and hotels:', error);
+        alert('Error loading map data: ' + error.message);
+    }
+}
+async function loadAreas() {
+    
+    try {
+        // Get selected wilayah filters
+        const selectedWilayah = Array.from(document.querySelectorAll('.wilayah-filter:checked'))
+            .map(cb => cb.value);
+        
+        // Build query string
+        let url = '/api/kecamatan';
+        if (selectedWilayah.length > 0) {
+            // Send as array parameter
+            const params = new URLSearchParams();
+            selectedWilayah.forEach(w => params.append('wilayah[]', w));
+            url += '?' + params.toString();
+        }
+        
+        const response = await fetch(url);
+        const data = await response.json();
+        
+      
+        
+        areasLayer.clearLayers();
+        
+        // Check if there are features
+        if (data.features && data.features.length > 0) {
+            L.geoJSON(data, {
+                style: { 
+                        color: '#FF6B35',         
+                        weight: 3,                 
+                        fillColor: '#FFE66D',     
+                        fillOpacity: 0.4           
+                    },
+                onEachFeature: (feature, layer) => {
+                    const name = feature.properties.name || 'Unknown';
+                    const wilayah = feature.properties.wilayah || '';
+                    layer.bindPopup(`
+                        <div class="p-2">
+                            <strong>${name}</strong>
+                            <p class="text-sm text-gray-600">${wilayah}</p>
+                        </div>
+                    `);
+                }
+            }).addTo(areasLayer);
+            
+            console.log(`${data.features.length} areas displayed`);
+        } else {
+            console.log('No areas to display');
+        }
+    } catch (error) {
+        console.error('Error loading areas:', error);
+        alert('Error loading areas. Please check console for details.');
+    }
+}
         
         // Price range sliders
         document.getElementById('priceMin').addEventListener('input', function(e) {
@@ -556,7 +726,17 @@
                 if (selectedRatings.length > 0 && !selectedRatings.includes(props.stars)) return;
                 if (selectedAreas.length > 0 && !selectedAreas.includes(props.wilayah)) return;
                 
-                const imageUrl = props.image ? '{{ asset('storage') }}/' + props.image : '{{ asset('storage/jumbotron.png') }}';
+                const fallbackImg = "{{ asset('storage/jumbotron.png') }}";
+const storageBase = "{{ asset('storage') }}/";
+
+let imageUrl = fallbackImg;
+
+if (props.image) {
+  imageUrl = (props.image.startsWith('http://') || props.image.startsWith('https://'))
+    ? props.image
+    : storageBase + props.image;
+}
+
                 
                 const marker = L.marker([coordinates[1], coordinates[0]], { icon: customIcon })
                     .bindPopup(`
@@ -587,7 +767,7 @@
         
         // Wilayah filter for area mode
         document.querySelectorAll('.wilayah-filter').forEach(checkbox => {
-            checkbox.addEventListener('change', loadAreas);
+            checkbox.addEventListener('change', loadAreasWithHotels); // Use combined function
         });
         
         // Initial load

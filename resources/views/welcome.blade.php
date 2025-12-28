@@ -229,7 +229,7 @@
                 <!-- Credits -->
                 <div class="text-center md:text-right text-sm text-gray-400">
                     <p>Hafidz Mulia - Rajni Yafi' Amelia Rahmah - Denis Tiara Luthfia</p>
-                    <p>Aprinia Tias Salsabila - Reynasya Diar Phalosa</p>
+                    <p>Aghnia Tias Salsabila - Reinasya Diar Phalosa</p>
                 </div>
                 <div class="mb-4 md:mb-0">
                     <img src="{{ asset('storage/logokuning.png') }}" alt="HiSurabaya" class="h-12">

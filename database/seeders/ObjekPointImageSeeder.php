@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ObjekPoint;
 use App\Models\ObjekPointImage;
 use Illuminate\Database\Seeder;
 
@@ -9,47 +10,30 @@ class ObjekPointImageSeeder extends Seeder
 {
     public function run(): void
     {
-        // Sample images for hotels (using placeholder URLs)
         $images = [
-            // Hotel Majapahit (PointID: 1)
-            ['PointID' => 1, 'ImageURL' => 'https://placehold.co/800x600/4F46E5/white?text=Majapahit+Exterior'],
-            ['PointID' => 1, 'ImageURL' => 'https://placehold.co/800x600/7C3AED/white?text=Majapahit+Room'],
-            ['PointID' => 1, 'ImageURL' => 'https://placehold.co/800x600/2563EB/white?text=Majapahit+Pool'],
-            
-            // Shangri-La (PointID: 2)
-            ['PointID' => 2, 'ImageURL' => 'https://placehold.co/800x600/DC2626/white?text=Shangri-La+View'],
-            ['PointID' => 2, 'ImageURL' => 'https://placehold.co/800x600/EA580C/white?text=Shangri-La+Suite'],
-            
-            // JW Marriott (PointID: 3)
-            ['PointID' => 3, 'ImageURL' => 'https://placehold.co/800x600/16A34A/white?text=Marriott+Lobby'],
-            ['PointID' => 3, 'ImageURL' => 'https://placehold.co/800x600/059669/white?text=Marriott+Room'],
-            
-            // Vasa Hotel (PointID: 4)
-            ['PointID' => 4, 'ImageURL' => 'https://placehold.co/800x600/0891B2/white?text=Vasa+Hotel'],
-            
-            // Grand Mercure (PointID: 5)
-            ['PointID' => 5, 'ImageURL' => 'https://placehold.co/800x600/7C2D12/white?text=Grand+Mercure'],
-            
-            // Swiss-Belinn (PointID: 6)
-            ['PointID' => 6, 'ImageURL' => 'https://placehold.co/800x600/BE123C/white?text=Swiss-Belinn'],
-            
-            // Ciputra World (PointID: 7)
-            ['PointID' => 7, 'ImageURL' => 'https://placehold.co/800x600/9333EA/white?text=Ciputra+World'],
-            ['PointID' => 7, 'ImageURL' => 'https://placehold.co/800x600/7C3AED/white?text=Ciputra+Room'],
-            
-            // Favehotel (PointID: 8)
-            ['PointID' => 8, 'ImageURL' => 'https://placehold.co/800x600/0369A1/white?text=Favehotel'],
-            
-            // Pop! Hotel (PointID: 9)
-            ['PointID' => 9, 'ImageURL' => 'https://placehold.co/800x600/CA8A04/white?text=Pop+Hotel'],
-            
-            // The Westin (PointID: 10)
-            ['PointID' => 10, 'ImageURL' => 'https://placehold.co/800x600/4338CA/white?text=Westin+Exterior'],
-            ['PointID' => 10, 'ImageURL' => 'https://placehold.co/800x600/6366F1/white?text=Westin+Spa'],
+            ['NamaObjek' => 'SURABAYA RIVER VIEW (SRV HOTEL)', 'ImageURL' => 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSyd7ASstmk6EYF9_47tB1WPBmYJ6KFjPFtMjZnu0tnSR7_Hex7Kbor3_97TANQooTQtMkGf26W6uzSVKNHpFiFk7cKBqjbIsa56mianWkgn7-ZJQCNuqLdb3qco0oOepSI1LLQMOQ=s1360-w1360-h1020-rw'],
+            ['NamaObjek' => 'HOTEL BUMI SURABAYA',            'ImageURL' => 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh-4wZc_t8m_z4pLIof9FNSX0uVrqfVuUB2ylTFimnJvC3jB-VobbzFB0inCuLEQ6cXpZ2sE-9OeDF1Q3sEbpjqGmvpw0na1nCw5GnGde39jz2UKH8lyu4mQInHAXk1JwdsGueHe6UE7bKc/w1200-h630-p-k-no-nu/115J5829__hotel_exterior__Small.jpg'],
+            ['NamaObjek' => 'FAVE HOTEL RUNGKUT',            'ImageURL' => 'https://lh3.googleusercontent.com/p/AF1QipOxm8Hm8-FB6B0eHfuP70mZ3lRbs-JpStgPSic3=s1360-w1360-h1020-rw'],
+            ['NamaObjek' => 'NOVOTEL SAMATOR SURABAYA TIMUR','ImageURL' => 'https://lh3.googleusercontent.com/p/AF1QipNjJdCQMyBjDvk5K_VL6Q5YS56hEHCq4u2Vqo5Q=s1360-w1360-h1020-rw'],
+            ['NamaObjek' => 'FOUR POINT BY SHERATON SURABAYA','ImageURL' => 'https://lh3.googleusercontent.com/p/AF1QipOgrA2lgIoE8SLnNojS-0vY3-EP5deSNDVPfBKL=s1360-w1360-h1020-rw'],
+            ['NamaObjek' => 'HOTEL SHANGRILA',                'ImageURL' => 'https://lh3.googleusercontent.com/p/AF1QipPwoxAVlTNfXmJ6ZmugVi3sAbmnPGI4I1Wjmot5=s1360-w1360-h1020-rw'],
+            ['NamaObjek' => 'THE CAPITAL HOTEL SURABAYA',     'ImageURL' => 'hotels/capital.jpg'],
+            ['NamaObjek' => 'THE ALANA SURABAYA',             'ImageURL' => 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/135024406.jpg?k=65a9708252f763295f487caed230ced905b17320e39f7c58cde31e84ba9cde69&o='],
+            ['NamaObjek' => 'HOTEL BERLIAN INTERNATIONAL',    'ImageURL' => 'https://lh3.googleusercontent.com/gps-cs-s/AG0ilSx6lw0TD0x12Bqg15smjjMb_-2nCiqr4hK1Zuvm-16W0YeER20S03VxNZL33U6KqVAwd1mZ9N-my85TSoifIc-BqCyBS67xWGZfGTcsuIAMs-sIEj33GoyKnUAjR58_octr2y9O=s1360-w1360-h1020-rw'],
+            ['NamaObjek' => 'HOTEL NEW GRAND PARK',           'ImageURL' => 'https://lh3.googleusercontent.com/p/AF1QipP-RN_XzfzIav3Aax_qMgeOvez4MciHQ5yO8_oH=s1360-w1360-h1020-rw'],
+            ['NamaObjek' => 'Institut Teknologi Sepuluh Nopember',          'ImageURL' => 'hotels/its.jpg']
         ];
-        
-        foreach ($images as $image) {
-            ObjekPointImage::create($image);
+
+        foreach ($images as $img) {
+            $point = ObjekPoint::where('NamaObjek', $img['NamaObjek'])->first();
+            if (!$point) {
+                throw new \RuntimeException("ObjekPoint not found for image: {$img['NamaObjek']}");
+            }
+
+            ObjekPointImage::updateOrCreate(
+                ['PointID' => $point->getKey(), 'ImageURL' => $img['ImageURL']],
+                ['PointID' => $point->getKey(), 'ImageURL' => $img['ImageURL']]
+            );
         }
     }
 }

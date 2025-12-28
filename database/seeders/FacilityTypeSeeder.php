@@ -12,32 +12,15 @@ class FacilityTypeSeeder extends Seeder
         $facilities = [
             'WiFi',
             'Parkir',
+            'Sarapan',
             'AC',
-            'TV',
             'Kolam Renang',
-            'Restoran',
             'Gym',
-            'Spa',
-            'Laundry',
-            'Room Service',
-            'Mini Bar',
-            'Coffee Maker',
-            'Bathtub',
-            'Shower',
-            'Hair Dryer',
-            'Safe Box',
-            'Telepon',
-            'Breakfast',
-            'Airport Shuttle',
-            'Meeting Room',
-            'Ballroom',
-            'Business Center',
-            'Concierge',
-            '24-Hour Front Desk',
+            'Resepsionis 24 Jam',
         ];
-        
-        foreach ($facilities as $facility) {
-            FacilityType::create(['Name' => $facility]);
+
+        foreach ($facilities as $name) {
+            FacilityType::updateOrCreate(['Name' => $name], ['Name' => $name]);
         }
     }
 }

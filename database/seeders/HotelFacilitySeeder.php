@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\FacilityType;
+use App\Models\ObjekPoint;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -9,49 +11,116 @@ class HotelFacilitySeeder extends Seeder
 {
     public function run(): void
     {
-        // Assign facilities to hotels
-        // Hotel Majapahit (PointID: 1) - Luxury hotel
-        $this->assignFacilities(1, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
-        
-        // Shangri-La (PointID: 2) - Luxury hotel
-        $this->assignFacilities(2, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 15, 16, 17, 18, 20, 22, 23, 24]);
-        
-        // JW Marriott (PointID: 3) - Luxury hotel
-        $this->assignFacilities(3, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24]);
-        
-        // Vasa Hotel (PointID: 4) - Mid-range
-        $this->assignFacilities(4, [1, 2, 3, 4, 6, 9, 10, 14, 15, 17, 18, 24]);
-        
-        // Grand Mercure (PointID: 5) - Mid-range
-        $this->assignFacilities(5, [1, 2, 3, 4, 5, 6, 9, 10, 14, 15, 16, 17, 18, 20, 24]);
-        
-        // Swiss-Belinn (PointID: 6) - Budget
-        $this->assignFacilities(6, [1, 2, 3, 4, 6, 14, 17, 18, 24]);
-        
-        // Ciputra World (PointID: 7) - Luxury
-        $this->assignFacilities(7, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24]);
-        
-        // Favehotel (PointID: 8) - Budget
-        $this->assignFacilities(8, [1, 2, 3, 4, 14, 18, 24]);
-        
-        // Pop! Hotel (PointID: 9) - Budget
-        $this->assignFacilities(9, [1, 3, 4, 14, 24]);
-        
-        // The Westin (PointID: 10) - Luxury
-        $this->assignFacilities(10, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24]);
-    }
-    
-    private function assignFacilities(int $pointId, array $facilityIds): void
-    {
-        foreach ($facilityIds as $facilityId) {
-            DB::table('hotel_facilities')->insert([
-                'PointID' => $pointId,
-                'FacilityID' => $facilityId,
-                'IsAvailable' => true,
-                'ExtraPrice' => 0,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        $facilityMap = FacilityType::all()->mapWithKeys(function ($f) {
+            return [$f->Name => $f->getKey()];
+        })->toArray();
+
+        $pointMap = ObjekPoint::all()->mapWithKeys(function ($p) {
+            return [$p->NamaObjek => $p->getKey()];
+        })->toArray();
+
+        $rows = [
+            ['NamaObjek' => 'SURABAYA RIVER VIEW (SRV HOTEL)', 'FacilityName' => 'WiFi',             'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'SURABAYA RIVER VIEW (SRV HOTEL)', 'FacilityName' => 'Parkir',           'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'SURABAYA RIVER VIEW (SRV HOTEL)', 'FacilityName' => 'Sarapan',          'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'SURABAYA RIVER VIEW (SRV HOTEL)', 'FacilityName' => 'AC',               'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'SURABAYA RIVER VIEW (SRV HOTEL)', 'FacilityName' => 'Kolam Renang',     'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'SURABAYA RIVER VIEW (SRV HOTEL)', 'FacilityName' => 'Gym',              'IsAvailable' => 0, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'SURABAYA RIVER VIEW (SRV HOTEL)', 'FacilityName' => 'Resepsionis 24 Jam','IsAvailable'=> 1, 'ExtraPrice' => 0],
+
+            ['NamaObjek' => 'HOTEL BUMI SURABAYA', 'FacilityName' => 'WiFi',             'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL BUMI SURABAYA', 'FacilityName' => 'Parkir',           'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL BUMI SURABAYA', 'FacilityName' => 'Sarapan',          'IsAvailable' => 1, 'ExtraPrice' => 200000],
+            ['NamaObjek' => 'HOTEL BUMI SURABAYA', 'FacilityName' => 'AC',               'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL BUMI SURABAYA', 'FacilityName' => 'Kolam Renang',     'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL BUMI SURABAYA', 'FacilityName' => 'Gym',              'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL BUMI SURABAYA', 'FacilityName' => 'Resepsionis 24 Jam','IsAvailable'=> 1, 'ExtraPrice' => 0],
+
+            ['NamaObjek' => 'FAVE HOTEL RUNGKUT', 'FacilityName' => 'WiFi',             'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'FAVE HOTEL RUNGKUT', 'FacilityName' => 'Parkir',           'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'FAVE HOTEL RUNGKUT', 'FacilityName' => 'Sarapan',          'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'FAVE HOTEL RUNGKUT', 'FacilityName' => 'AC',               'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'FAVE HOTEL RUNGKUT', 'FacilityName' => 'Kolam Renang',     'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'FAVE HOTEL RUNGKUT', 'FacilityName' => 'Gym',              'IsAvailable' => 0, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'FAVE HOTEL RUNGKUT', 'FacilityName' => 'Resepsionis 24 Jam','IsAvailable'=> 1, 'ExtraPrice' => 0],
+
+            ['NamaObjek' => 'NOVOTEL SAMATOR SURABAYA TIMUR', 'FacilityName' => 'WiFi',             'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'NOVOTEL SAMATOR SURABAYA TIMUR', 'FacilityName' => 'Parkir',           'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'NOVOTEL SAMATOR SURABAYA TIMUR', 'FacilityName' => 'Sarapan',          'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'NOVOTEL SAMATOR SURABAYA TIMUR', 'FacilityName' => 'AC',               'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'NOVOTEL SAMATOR SURABAYA TIMUR', 'FacilityName' => 'Kolam Renang',     'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'NOVOTEL SAMATOR SURABAYA TIMUR', 'FacilityName' => 'Gym',              'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'NOVOTEL SAMATOR SURABAYA TIMUR', 'FacilityName' => 'Resepsionis 24 Jam','IsAvailable'=> 1, 'ExtraPrice' => 0],
+
+            ['NamaObjek' => 'FOUR POINT BY SHERATON SURABAYA', 'FacilityName' => 'WiFi',             'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'FOUR POINT BY SHERATON SURABAYA', 'FacilityName' => 'Parkir',           'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'FOUR POINT BY SHERATON SURABAYA', 'FacilityName' => 'Sarapan',          'IsAvailable' => 1, 'ExtraPrice' => 250000],
+            ['NamaObjek' => 'FOUR POINT BY SHERATON SURABAYA', 'FacilityName' => 'AC',               'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'FOUR POINT BY SHERATON SURABAYA', 'FacilityName' => 'Kolam Renang',     'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'FOUR POINT BY SHERATON SURABAYA', 'FacilityName' => 'Gym',              'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'FOUR POINT BY SHERATON SURABAYA', 'FacilityName' => 'Resepsionis 24 Jam','IsAvailable'=> 1, 'ExtraPrice' => 0],
+
+            ['NamaObjek' => 'HOTEL SHANGRILA', 'FacilityName' => 'WiFi',             'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL SHANGRILA', 'FacilityName' => 'Parkir',           'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL SHANGRILA', 'FacilityName' => 'Sarapan',          'IsAvailable' => 1, 'ExtraPrice' => 300000],
+            ['NamaObjek' => 'HOTEL SHANGRILA', 'FacilityName' => 'AC',               'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL SHANGRILA', 'FacilityName' => 'Kolam Renang',     'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL SHANGRILA', 'FacilityName' => 'Gym',              'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL SHANGRILA', 'FacilityName' => 'Resepsionis 24 Jam','IsAvailable'=> 1, 'ExtraPrice' => 0],
+
+            ['NamaObjek' => 'THE CAPITAL HOTEL SURABAYA', 'FacilityName' => 'WiFi',             'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'THE CAPITAL HOTEL SURABAYA', 'FacilityName' => 'Parkir',           'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'THE CAPITAL HOTEL SURABAYA', 'FacilityName' => 'Sarapan',          'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'THE CAPITAL HOTEL SURABAYA', 'FacilityName' => 'AC',               'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'THE CAPITAL HOTEL SURABAYA', 'FacilityName' => 'Kolam Renang',     'IsAvailable' => 0, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'THE CAPITAL HOTEL SURABAYA', 'FacilityName' => 'Gym',              'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'THE CAPITAL HOTEL SURABAYA', 'FacilityName' => 'Resepsionis 24 Jam','IsAvailable'=> 1, 'ExtraPrice' => 0],
+
+            ['NamaObjek' => 'THE ALANA SURABAYA', 'FacilityName' => 'WiFi',             'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'THE ALANA SURABAYA', 'FacilityName' => 'Parkir',           'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'THE ALANA SURABAYA', 'FacilityName' => 'Sarapan',          'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'THE ALANA SURABAYA', 'FacilityName' => 'AC',               'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'THE ALANA SURABAYA', 'FacilityName' => 'Kolam Renang',     'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'THE ALANA SURABAYA', 'FacilityName' => 'Gym',              'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'THE ALANA SURABAYA', 'FacilityName' => 'Resepsionis 24 Jam','IsAvailable'=> 1, 'ExtraPrice' => 0],
+
+            ['NamaObjek' => 'HOTEL BERLIAN INTERNATIONAL', 'FacilityName' => 'WiFi',             'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL BERLIAN INTERNATIONAL', 'FacilityName' => 'Parkir',           'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL BERLIAN INTERNATIONAL', 'FacilityName' => 'Sarapan',          'IsAvailable' => 1, 'ExtraPrice' => 42000],
+            ['NamaObjek' => 'HOTEL BERLIAN INTERNATIONAL', 'FacilityName' => 'AC',               'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL BERLIAN INTERNATIONAL', 'FacilityName' => 'Kolam Renang',     'IsAvailable' => 0, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL BERLIAN INTERNATIONAL', 'FacilityName' => 'Gym',              'IsAvailable' => 0, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL BERLIAN INTERNATIONAL', 'FacilityName' => 'Resepsionis 24 Jam','IsAvailable'=> 1, 'ExtraPrice' => 0],
+
+            ['NamaObjek' => 'HOTEL NEW GRAND PARK', 'FacilityName' => 'WiFi',             'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL NEW GRAND PARK', 'FacilityName' => 'Parkir',           'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL NEW GRAND PARK', 'FacilityName' => 'Sarapan',          'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL NEW GRAND PARK', 'FacilityName' => 'AC',               'IsAvailable' => 1, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL NEW GRAND PARK', 'FacilityName' => 'Kolam Renang',     'IsAvailable' => 0, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL NEW GRAND PARK', 'FacilityName' => 'Gym',              'IsAvailable' => 0, 'ExtraPrice' => 0],
+            ['NamaObjek' => 'HOTEL NEW GRAND PARK', 'FacilityName' => 'Resepsionis 24 Jam','IsAvailable'=> 1, 'ExtraPrice' => 0],
+        ];
+
+        foreach ($rows as $r) {
+            if (!isset($pointMap[$r['NamaObjek']])) {
+                throw new \RuntimeException("ObjekPoint not found for facility: {$r['NamaObjek']}");
+            }
+            if (!isset($facilityMap[$r['FacilityName']])) {
+                throw new \RuntimeException("FacilityType not found: {$r['FacilityName']}");
+            }
+
+            $pointId = $pointMap[$r['NamaObjek']];
+            $facilityId = $facilityMap[$r['FacilityName']];
+
+            DB::table('hotel_facilities')->updateOrInsert(
+                ['PointID' => $pointId, 'FacilityID' => $facilityId],
+                [
+                    'IsAvailable' => (bool)$r['IsAvailable'],
+                    'ExtraPrice' => (int)$r['ExtraPrice'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
         }
     }
 }

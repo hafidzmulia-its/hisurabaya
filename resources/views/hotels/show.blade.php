@@ -109,7 +109,7 @@
                     </div>
 
                     <!-- Facilities -->
-                    @if($hotel->facilities->count() > 0)
+                    <!-- @if($hotel->facilities->count() > 0)
                         <div class="mb-6">
                             <h3 class="text-lg font-semibold mb-4">Facilities</h3>
                             <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -126,7 +126,7 @@
                                 @endforeach
                             </div>
                         </div>
-                    @endif
+                    @endif -->
 
                     <!-- Map Preview -->
                     <div class="mb-6">

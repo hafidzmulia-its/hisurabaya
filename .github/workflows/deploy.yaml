@@ -1,0 +1,50 @@
+name: Deploy HiSurabaya to Hostdata
+
+on:
+  push:
+    branches: [ "main" ]   # Triggers on push to main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH to Hostdata
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HOSTDATA_SSH_HOST }}
+          username: ${{ secrets.HOSTDATA_SSH_USER }}
+          password: ${{ secrets.HOSTDATA_SSH_PASSWORD }}
+          port: ${{ secrets.HOSTDATA_SSH_PORT }}
+          script: |
+            cd ~/public_html/hisurabaya
+            
+            # Pull latest changes
+            git pull origin main
+            
+            # Install/update dependencies (Use PHP 8.2 or higher)
+            /usr/local/bin/ea-php82 /usr/local/bin/composer install --no-dev --optimize-autoloader
+            
+            # Run migrations
+            /usr/local/bin/ea-php82 artisan migrate --force
+            
+            # Clear and cache configurations
+            /usr/local/bin/ea-php82 artisan config:clear
+            /usr/local/bin/ea-php82 artisan config:cache
+            /usr/local/bin/ea-php82 artisan route:cache
+            /usr/local/bin/ea-php82 artisan view:cache
+            
+            # Build frontend assets if needed
+            npm install --production
+            npm run build
+            
+            # Set proper permissions
+            chmod -R 775 storage bootstrap/cache
+            
+            # Create storage link if not exists
+            /usr/local/bin/ea-php82 artisan storage:link
+            
+            echo "Deployment completed successfully!"

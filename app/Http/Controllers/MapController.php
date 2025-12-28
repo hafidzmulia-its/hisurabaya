@@ -91,27 +91,47 @@ class MapController extends Controller
     /**
      * Get kecamatan polygons
      */
-    public function getKecamatan(Request $request)
-    {
-        $query = Kecamatan::query();
-        
-        // Wilayah filter
-        if ($request->filled('wilayah')) {
-            $query->where('Wilayah', $request->wilayah);
+
+public function getKecamatan(Request $request)
+{
+    set_time_limit(120);
+    ini_set('memory_limit', '512M');
+    
+    $query = Kecamatan::query();
+    
+    // Handle wilayah filter (supports both single and array)
+    if ($request->filled('wilayah')) {
+        $wilayah = $request->input('wilayah');
+        if (is_array($wilayah)) {
+            $query->whereIn('Wilayah', $wilayah);
+        } else {
+            $query->where('Wilayah', $wilayah);
         }
-        
-        $kecamatans = $query->whereNotNull('PolygonJSON')->get();
-        
-        // Transform to GeoJSON format
-        $geojson = [
-            'type' => 'FeatureCollection',
-            'features' => $kecamatans->map(function($kecamatan) {
-                // Ensure PolygonJSON is properly decoded
-                $geometry = is_string($kecamatan->PolygonJSON) 
+    }
+    
+    $features = [];
+    $query->whereNotNull('PolygonJSON')
+          ->chunk(10, function($kecamatans) use (&$features) {
+            foreach ($kecamatans as $kecamatan) {
+                $rawGeometry = is_string($kecamatan->PolygonJSON) 
                     ? json_decode($kecamatan->PolygonJSON, true) 
                     : $kecamatan->PolygonJSON;
                 
-                return [
+                // Handle both formats
+                if (isset($rawGeometry['type']) && isset($rawGeometry['coordinates'])) {
+                    // Format 2: Already proper GeoJSON
+                    $geometry = $rawGeometry;
+                } else if (is_array($rawGeometry) && isset($rawGeometry[0]) && is_array($rawGeometry[0])) {
+                    // Format 1: Direct array of coordinates
+                    $geometry = [
+                        'type' => 'Polygon',
+                        'coordinates' => [$rawGeometry]
+                    ];
+                } else {
+                    continue;
+                }
+                
+                $features[] = [
                     'type' => 'Feature',
                     'geometry' => $geometry,
                     'properties' => [
@@ -120,11 +140,14 @@ class MapController extends Controller
                         'wilayah' => $kecamatan->Wilayah,
                     ]
                 ];
-            })->toArray()
-        ];
-        
-        return response()->json($geojson);
-    }
+            }
+          });
+    
+    return response()->json([
+        'type' => 'FeatureCollection',
+        'features' => $features
+    ]);
+}
     
     /**
      * Get routes/roads data
